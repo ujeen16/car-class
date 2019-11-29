@@ -1,0 +1,140 @@
+#Car Class2.0 by Eugene Ayotte on 11/26/19
+class Car:
+    def __init__(self, tank_size, tank, make, model, mpg):
+        self.tank_size = tank_size
+        self.tank = tank
+        self.make = make
+        self.model = model
+        self.max_speed = 100
+        self.mpg = mpg
+        self.odometer = 0
+
+    #my cars old af
+    def usedCar(self, miles):
+        self.odometer = miles
+        return self.odometer
+
+    # changes the max speed attribute
+    def topSpeed(self, max_speed):
+        self.max_speed = max_speed
+        return self.max_speed
+
+    # converts number to int
+    def getFuel(self):
+        return int(self.tank)
+
+    # string of make and model
+    def getType(self, make, model):
+        return [str(self.make), str(self.model)]
+
+    def fillTank(self):
+        self.tank = self.tank_size
+        print("filled gas tank")
+        return self.tank
+
+    def drive(self, hours_driving, speed_mph):
+        #can't move if you don't have gas
+        gas_check = self.tank - ((speed_mph * hours_driving) / self.mpg)
+        if gas_check >= 0:
+        #can't go over max speed
+            if self.max_speed < speed_mph:
+                speed_mph = self.max_speed
+                print("you entered a value above your maximum speed, speed converted to highest maximum")
+        #increasing odometer for driving
+            self.odometer += (hours_driving * speed_mph)
+        #adjusting tank for driving
+            self.tank = int(self.tank - ((speed_mph * hours_driving) / self.mpg))
+            print("drove car", hours_driving, "hours at", speed_mph, "mph")
+            return self.odometer, self.tank
+        else:
+            print("You don't have enough gas to move that distance")
+
+    #sick of looking for my info
+    def carInfo(self):
+        info = {"make": self.make, "model": self.model,"max speed": self.max_speed,
+                "mpg": self.mpg,"tank size": self.tank_size,"tank": self.tank,"odometer": self.odometer}
+        print(info)
+
+#creating Truck sub class of Car with bed capacity added
+class Truck(Car):
+    def __init__(self, tank_size, tank, make, model, mpg, bed_capacity):
+        super().__init__(tank_size, tank, make, model, mpg)
+        self.bed_capacity = bed_capacity
+        self.weightInBed = 0
+
+    def setBed(self, weightInPounds):
+        self.weightInBed = weightInPounds
+        return self.weightInBed
+
+    def TruckInfo(self):
+        info = {"make": self.make, "model": self.model, "max speed": self.max_speed,
+                "mpg": self.mpg, "tank size": self.tank_size, "tank": self.tank, "odometer": self.odometer,
+                "bed_capacity": self.bed_capacity, "weightInBed": self.weightInBed}
+        print(info)
+
+    def driveTruck(self, hours_driving, speed_mph):
+        #can't move if weight is above the maximum possible for truck
+        if self.weightInBed > self.bed_capacity:
+            print("there is too much weight in the truck to drive")
+        else:
+            # lose mpg in proportion of weight in bed versus max weight
+            adjustedMpg = self.mpg*(1-(self.weightInBed/(self.bed_capacity*1.1)))
+            # can't move if you don't have gas
+            gas_check = self.tank - ((speed_mph * hours_driving) / adjustedMpg)
+            if gas_check >= 0:
+                # can't go over max speed
+                if self.max_speed < speed_mph:
+                    speed_mph = self.max_speed
+                    print("you entered a value above your maximum speed, speed converted to highest maximum")
+                # increasing odometer for driving
+                self.odometer += (hours_driving * speed_mph)
+                # adjusting tank for driving
+                self.tank = int(self.tank - ((speed_mph * hours_driving) / adjustedMpg))
+                print("drove car", hours_driving, "hours at", speed_mph, "mph")
+                return self.odometer, self.tank
+            else:
+                print("You don't have enough gas to move that distance")
+
+
+#creating instance of class and testing methods and attributes
+def main():
+    #testing car class
+    myCar = Car(19.4, 15, 'nissan', 'xterra', 19)
+    print("max speed after topspeed method", myCar.topSpeed(98))
+    print("my car is pretty used so adjust odometer", myCar.usedCar(195000))
+    print("tank fuel as int", myCar.getFuel())
+    print(myCar.getType(myCar.make, myCar.model))
+    print("--------------------------\n")
+    print("starting tank", myCar.tank, "max tank", myCar.tank_size)
+    myCar.carInfo()
+    myCar.fillTank()
+    myCar.carInfo()
+    myCar.drive(6,60)
+    myCar.carInfo()
+    myCar.fillTank()
+    myCar.carInfo()
+    myCar.drive(4.1, 65)
+    myCar.carInfo()
+    myCar.drive(30,90)
+    myCar.carInfo()
+    myCar.drive(.5,140)
+    myCar.carInfo()
+    #testing truck class
+    print("--------------------------")
+    print("creating and modifying a truck instance now\n")
+    myTruck = Truck(36, 36, 'Ford', 'explore 2020 F-150', 25, 2470)
+    myTruck.TruckInfo()
+    print("max speed after top speed method", myTruck.topSpeed(143))
+    myTruck.TruckInfo()
+    myTruck.driveTruck(1,30)
+    print("changing bed size to", myTruck.setBed(1800))
+    myTruck.TruckInfo()
+    myTruck.driveTruck(1,30)
+    myTruck.TruckInfo()
+    myTruck.setBed(3000)
+    myTruck.driveTruck(2,55)
+    myTruck.TruckInfo()
+
+
+if __name__ == "__main__":
+    main()
