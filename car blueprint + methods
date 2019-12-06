@@ -1,4 +1,7 @@
 #Car Class2.0 by Eugene Ayotte on 11/26/19
+#Car Class2.0 by Eugene Ayotte on 11/26/19
+#could stop car at 0
+#could make a method to adjust initial tank to be no more than the tank size and call at beginning of program
 class Car:
     def __init__(self, tank_size, tank, make, model, mpg):
         self.tank_size = tank_size
@@ -12,11 +15,13 @@ class Car:
     #my cars old af
     def usedCar(self, miles):
         self.odometer = miles
+        print("your odometer has been adjusted to", miles)
         return self.odometer
 
     # changes the max speed attribute
     def topSpeed(self, max_speed):
         self.max_speed = max_speed
+        print("your top speed has been adjusted to", max_speed)
         return self.max_speed
 
     # converts number to int
@@ -134,7 +139,39 @@ def main():
     myTruck.setBed(3000)
     myTruck.driveTruck(2,55)
     myTruck.TruckInfo()
+#if __name__ == "__main__":
+#    main()
 
+#runs a continues loop allowing functionality and miniputaion of the car class but does not have truck sub class implemented
+def carGame():
+    print("welcome to a driving simulator =) \nI'll just need some basic information about your car!")
+    car = Car(float(input("please enter the tank size of your car in gallons: ")), float(input("enter the current gas in the tank: ")), input("enter the make: "), input("enter the model: "), int(input("inter the mpg of your car: ")))
+    command = ""
+    while command != "QUIT" and command != "quit":
+        print("---------------------------- \n\n 1. drive  2. top speed  3. set odometer  4. fill gas tank  5. car info  6. Quit")
+        command = input("Please choose an option: ")
+        command = command.upper()
+        command = command.replace(" ", "")
 
-if __name__ == "__main__":
-    main()
+        if command == "DRIVE":
+            car.drive(float(input("enter the hours you will be driving: ")), float(input("enter the speed you wish to drive at: ")))
+
+        elif command == "TOPSPEED":
+            car.topSpeed(input("enter the max speed of your car: "))
+
+        elif command == "SETODOMETER":
+            car.usedCar(input("enter the total miles the car has been driven: "))
+
+        elif command == "FILLGASTANK":
+            car.fillTank()
+
+        elif command == "CARINFO":
+            car.carInfo()
+
+        else:
+            if command != "QUIT":
+                print("You have entered an invalid operator")
+                print("if you wish to exit this program type: quit ")
+
+carGame()
+
